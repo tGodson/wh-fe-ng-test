@@ -5,7 +5,7 @@
  * * Both [monthly_payment] and [late_payment] should print in the template in currency format : $1,234
  */
 
-import { Component, Input,NgModule  } from '@angular/core';
+import { Component, Input,NgModule, OnInit  } from '@angular/core';
 import { RouterModule } from "@angular/router";
 
 @Component({
@@ -16,11 +16,25 @@ import { RouterModule } from "@angular/router";
                     <b>Late Payment Fee : {{late_payment}}</b> <br/>
                 </div>`
 })
-export class Test01Component {
-
-    loan_amount:number = 1000;
-    monthly_payment:number = 200;
-    late_payment = 10;
+export class Test01Component implements OnInit {
+    @Input()
+    loan_amount:number = 300;
+    @Input()
+    monthly_payment:number|string = 200;
+    @Input()
+    late_payment:number|string = 10;
+    ngOnInit() {
+        this.calculatePayments();
+    }
+    calculatePayments() {
+        if (!this.loan_amount) {
+            this.monthly_payment = 'N/A';
+            this.late_payment = 'N/A';
+        } else {
+            this.monthly_payment = .02 * this.loan_amount;
+            this.late_payment = .05 * this.loan_amount;
+        }
+    }
 }
 
 @NgModule({
